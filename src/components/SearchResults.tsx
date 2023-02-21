@@ -1,6 +1,7 @@
 import { ProductData } from "@/pages"
 import { useMemo } from "react"
 import { ProductItem } from "./ProductItem"
+import {List, ListRowRenderer} from "react-virtualized"
 
 interface SearchDataProps{
   data: Array<ProductData>
@@ -15,17 +16,36 @@ export function SearchResults({data, onAddtoWishList, totalPrice}:SearchDataProp
   que informa quando ele deve fazer o calculo dnovo [igual ao useEffect] */
 
 
+  const rowRender: ListRowRenderer = ({index, style, key}) =>{
+
+    return(
+      <div style={style} key={key}>
+        <ProductItem product={data[index]}
+          onAddToWishList={onAddtoWishList}/>
+      </div>
+    )
+
+  }
+
   return(
     <div>
 
       <h2>{totalPrice}</h2>
 
-      {data.map((product)=>{
+      <List height={300}
+      rowHeight={25}
+      width={900}
+      overscanRowCount={5}
+      rowCount={data.length}
+      rowRenderer={rowRender}
+      />
+
+      {/* {data.map((product)=>{
         return(
           <ProductItem product={product} key={product.id}
           onAddToWishList={onAddtoWishList}/>
         )
-      })}
+      })} */}
     </div>
   )
 }

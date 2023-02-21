@@ -1,5 +1,19 @@
 import { ProductData } from "@/pages"
-import { memo } from "react"
+import { memo, useState } from "react"
+import { AddProductToWishListProps } from "./AddProductToWishList"
+import dynamic from "next/dynamic"
+
+/* code spliting, so faz a importacao do componente quando vc vai usar ela
+para evitar que faca a importacao e nao utilize ao componente ou blibioteca
+desse modo ganha velocidade no tempo de build */
+const AddProductToWishList = dynamic<AddProductToWishListProps>(()=>{
+  return import("./AddProductToWishList").then(mod => mod.AddProductToWishList)
+},
+/*Como o componente so vai ser renderizado quando o usuario necessitar, e importante
+como segundo parametro do dinamic, passar um loading */
+ {
+  loading:()=> <span>Carregando...</span>
+})
 
 interface ProductItemProps{
   product:ProductData
@@ -8,10 +22,19 @@ interface ProductItemProps{
 
 export function ProductItemComponent({product, onAddToWishList}:ProductItemProps){
 
+  const [isAddingWishList, setIsAddingWishList] = useState(false)
+
   return(
     <div>
       {product.title} - <strong>{product.priceFormatted}</strong>
-      <button onClick={() => onAddToWishList(product.id)}>Add to Wish List</button>
+      <button onClick={()=> setIsAddingWishList(true)}>Adicionar aos favoritos</button>
+     {isAddingWishList && (
+      <AddProductToWishList 
+      onAddtoWishList={() =>
+       onAddToWishList(product.id)}
+      onRequestClose={()=>setIsAddingWishList(false)}
+      />
+     )}
     </div>
   )
 

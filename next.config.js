@@ -4,3 +4,5 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+/* bundlerAnalyzer roda o build da aplicacao analisando o que ta mais pesado
+[temnablibioteca do Next] */
